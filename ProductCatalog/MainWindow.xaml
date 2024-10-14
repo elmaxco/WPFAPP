@@ -8,7 +8,7 @@
         Title="MainWindow" Height="600" Width="920"
         WindowStyle="None"
         ResizeMode="NoResize"
-        Background="Transparent"
+        Background="Beige"
         AllowsTransparency="True">
     
     <Border Background="#272537"
