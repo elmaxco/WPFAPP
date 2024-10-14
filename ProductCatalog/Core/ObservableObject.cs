@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 
 
-namespace ProductCatalog.Core
+/*namespace ProductCatalog.Core
 {
     class ObservableObject : INotifyPropertyChanged
     {
@@ -14,3 +14,4 @@ namespace ProductCatalog.Core
         }
     }
 }
+*/

@@ -2,6 +2,7 @@
 using Resources.Enums;
 using System.Windows.Controls;
 using Resources.Services;
+using Resources.Models;
 
 namespace ProductCatalog
 {

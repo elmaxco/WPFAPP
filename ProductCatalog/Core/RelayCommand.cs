@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace ProductCatalog.Core
+/*namespace ProductCatalog.Core
 {
     class RelayCommand : ICommand
     {
@@ -38,3 +38,4 @@ namespace ProductCatalog.Core
         }
     }
 }
+*/
