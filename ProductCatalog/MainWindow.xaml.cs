@@ -14,7 +14,11 @@ namespace ProductCatalog
         public MainWindow()
         {
             InitializeComponent();
-            _productService = new ProductService();
+
+            // Skapa en instans av FileService och skicka den till ProductService
+            IFileService fileService = new FileService("file.json");
+            _productService = new ProductService(fileService);
+
             LoadProductList();
         }
 

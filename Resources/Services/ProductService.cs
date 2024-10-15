@@ -2,19 +2,17 @@
 using Resources.Enums;
 using Resources.Models;
 
-
-
 namespace Resources.Services;
 
 public class ProductService : IProductService
 {
-    private static readonly string _filePath = Path.Combine(AppContext.BaseDirectory, "file.json");
-    private readonly FileService _fileService = new FileService(_filePath);
+    private readonly IFileService _fileService;
     private List<Product> _productList = new List<Product>();
-    private decimal price;
-    
 
-    
+    public ProductService(IFileService fileService) // Uppdaterad konstruktor
+    {
+        _fileService = fileService;
+    }
 
     public ResultStatus AddToList(Product product)
     {
@@ -46,23 +44,18 @@ public class ProductService : IProductService
         return _productList;
     }
 
-
-    public ResultStatus DeleteProduct(Product product) // Ändrat från string till Product + fixat stavfel i metodenamn
+    public ResultStatus DeleteProduct(Product product)
     {
         try
         {
-            // Ladda in produkter från filen till listan
             GetProductsFromFile();
 
-            // Kontrollera om produkten finns i listan
             var productToDelete = _productList.FirstOrDefault(p => p.ID == product.ID);
             if (productToDelete == null)
                 return ResultStatus.NotFound;
 
-            // Ta bort produkten från listan om den finns
             _productList.Remove(productToDelete);
 
-            // Spara den uppdaterade listan tillbaka till filen, fixat stavfel
             var json = JsonConvert.SerializeObject(_productList, Newtonsoft.Json.Formatting.Indented);
             var result = _fileService.SaveToFile(json);
 
@@ -74,6 +67,7 @@ public class ProductService : IProductService
         }
     }
 
+    // Uppdaterad: Metoden är nu public för att matcha gränssnittet
     public void GetProductsFromFile()
     {
         try
@@ -83,6 +77,9 @@ public class ProductService : IProductService
             if (!string.IsNullOrEmpty(content))
                 _productList = JsonConvert.DeserializeObject<List<Product>>(content)!;
         }
-        catch { }
+        catch
+        {
+            // Handle exceptions if necessary
+        }
     }
 }

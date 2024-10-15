@@ -1,12 +1,12 @@
 ﻿using Moq;
-using Newtonsoft.Json;
-using Resources.Enums;
-using Resources.Models;
-using Resources.Services;
-using System.Collections.Generic;
 using Xunit;
+using Resources.Services;
+using Resources.Models;
+using Resources.Enums;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using System.Linq;
 
-namespace Resources.Tests;
 public class ProductServiceTests
 {
     private readonly Mock<IFileService> _fileServiceMock;
@@ -22,72 +22,82 @@ public class ProductServiceTests
     public void AddToList_ShouldAddProduct_WhenProductIsValid()
     {
         // Arrange
-        var product = new Product { ID = "1", Name = "TestProduct" };
-        _fileServiceMock.Setup(fs => fs.GetFromFile()).Returns("[]");
-        _fileServiceMock.Setup(fs => fs.SaveToFile(It.IsAny<string>())).Returns(true);
+        var product = new Product { Name = "Test Product", Price = 100, Category = "Electronics" };
+        _fileServiceMock.Setup(f => f.GetFromFile()).Returns(string.Empty); // Tom fil
+        _fileServiceMock.Setup(f => f.SaveToFile(It.IsAny<string>())).Returns(true);
 
         // Act
         var result = _productService.AddToList(product);
 
         // Assert
         Assert.Equal(ResultStatus.Success, result);
-        _fileServiceMock.Verify(fs => fs.SaveToFile(It.IsAny<string>()), Times.Once);
+        _fileServiceMock.Verify(f => f.SaveToFile(It.IsAny<string>()), Times.Once);
     }
 
     [Fact]
     public void AddToList_ShouldReturnExists_WhenProductAlreadyExists()
     {
         // Arrange
-        var existingProduct = new Product { ID = "1", Name = "TestProduct" };
-        var productList = new List<Product> { existingProduct };
-        var json = JsonConvert.SerializeObject(productList);
-        _fileServiceMock.Setup(fs => fs.GetFromFile()).Returns(json);
-
-        var newProduct = new Product { ID = "2", Name = "TestProduct" }; // Same name, different ID
+        var product = new Product { Name = "Test Product", Price = 100, Category = "Electronics" };
+        var productList = new List<Product> { product };
+        _fileServiceMock.Setup(f => f.GetFromFile()).Returns(JsonConvert.SerializeObject(productList));
 
         // Act
-        var result = _productService.AddToList(newProduct);
+        var result = _productService.AddToList(product);
 
         // Assert
         Assert.Equal(ResultStatus.Exists, result);
     }
 
     [Fact]
-    public void DeleteProduct_ShouldRemoveExistingProductFromList()
+    public void GetAllProducts_ShouldReturnProductList_FromFile()
     {
         // Arrange
-        var product = new Product { ID = "1", Name = "TestProduct" };
+        var productList = new List<Product>
+        {
+            new Product { Name = "Test Product 1", Price = 100, Category = "Electronics" },
+            new Product { Name = "Test Product 2", Price = 200, Category = "Clothing" }
+        };
+        _fileServiceMock.Setup(f => f.GetFromFile()).Returns(JsonConvert.SerializeObject(productList));
+
+        // Act
+        var result = _productService.GetAllProducts();
+
+        // Assert
+        Assert.Equal(2, result.Count());
+        Assert.Equal("Test Product 1", result.First().Name);
+    }
+
+    [Fact]
+    public void DeleteProduct_ShouldRemoveProduct_WhenProductExists()
+    {
+        // Arrange
+        var product = new Product { Name = "Test Product", Price = 100, Category = "Electronics", ID = "1" };
         var productList = new List<Product> { product };
-        var json = JsonConvert.SerializeObject(productList);
-        _fileServiceMock.Setup(fs => fs.GetFromFile()).Returns(json);
-        _fileServiceMock.Setup(fs => fs.SaveToFile(It.IsAny<string>())).Returns(true);
+        _fileServiceMock.Setup(f => f.GetFromFile()).Returns(JsonConvert.SerializeObject(productList));
+        _fileServiceMock.Setup(f => f.SaveToFile(It.IsAny<string>())).Returns(true);
 
         // Act
         var result = _productService.DeleteProduct(product);
 
         // Assert
         Assert.Equal(ResultStatus.Success, result);
-        _fileServiceMock.Verify(fs => fs.SaveToFile(It.IsAny<string>()), Times.Once);
+        _fileServiceMock.Verify(f => f.SaveToFile(It.IsAny<string>()), Times.Once);
     }
 
     [Fact]
     public void DeleteProduct_ShouldReturnNotFound_WhenProductDoesNotExist()
     {
         // Arrange
-        var productList = new List<Product>
-    {
-        new Product { ID = "1", Name = "TestProduct" }
-    };
-        var json = JsonConvert.SerializeObject(productList);
-        _fileServiceMock.Setup(fs => fs.GetFromFile()).Returns(json);
+        var productList = new List<Product>();
+        _fileServiceMock.Setup(f => f.GetFromFile()).Returns(JsonConvert.SerializeObject(productList));
 
-        var productToDelete = new Product { ID = "2", Name = "NonExistentProduct" };
+        var product = new Product { Name = "Non-existing Product", ID = "999" };
 
         // Act
-        var result = _productService.DeleteProduct(productToDelete);
+        var result = _productService.DeleteProduct(product);
 
         // Assert
         Assert.Equal(ResultStatus.NotFound, result);
     }
-
 }
