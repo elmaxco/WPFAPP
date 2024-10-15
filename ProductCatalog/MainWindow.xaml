@@ -15,7 +15,6 @@
             </ListView.View>
         </ListView>
 
-        <!-- Form to Add/Edit Products -->
         <StackPanel HorizontalAlignment="Right" Width="250" Margin="0,10,10,0">
             <TextBlock Text="Product Name:" />
             <TextBox Name="ProductNameTextBox" Margin="0,5" />

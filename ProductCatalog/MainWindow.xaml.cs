@@ -25,15 +25,24 @@ namespace ProductCatalog
 
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
+            if (!decimal.TryParse(PriceTextBox.Text, out var price))
+            {
+                StatusTextBlock.Text = "Error: Price must be a valid number!";
+                return; // Avbryt om priset inte är giltigt
+            }
+
             var product = new Product
             {
                 Name = ProductNameTextBox.Text,
-                Price = decimal.TryParse(PriceTextBox.Text, out var price) ? price : 0,
+                Price = price,
                 Category = ((ComboBoxItem)CategoryTextBox.SelectedItem)?.Content.ToString() ?? string.Empty
             };
 
             var result = _productService.AddToList(product);
             UpdateStatus(result);
+
+            // Rensa fälten efter att en produkt har lagts till
+            ClearInputFields();
 
             LoadProductList();
         }
@@ -42,8 +51,14 @@ namespace ProductCatalog
         {
             if (_selectedProduct != null)
             {
+                if (!decimal.TryParse(PriceTextBox.Text, out var price))
+                {
+                    StatusTextBlock.Text = "Error: Price must be a valid number!";
+                    return; // Avbryt om priset inte är giltigt
+                }
+
                 _selectedProduct.Name = ProductNameTextBox.Text;
-                _selectedProduct.Price = decimal.TryParse(PriceTextBox.Text, out var price) ? price : 0;
+                _selectedProduct.Price = price;
                 _selectedProduct.Category = ((ComboBoxItem)CategoryTextBox.SelectedItem)?.Content.ToString() ?? string.Empty;
 
                 _productService.DeleteProduct(_selectedProduct);
@@ -51,6 +66,9 @@ namespace ProductCatalog
 
                 LoadProductList();
                 UpdateStatus(ResultStatus.Success);
+
+                // Rensa fälten efter att produkten har uppdaterats
+                ClearInputFields();
             }
         }
 
@@ -62,6 +80,9 @@ namespace ProductCatalog
                 UpdateStatus(result);
 
                 LoadProductList();
+
+                // Rensa fälten efter att produkten har tagits bort
+                ClearInputFields();
             }
         }
 
@@ -98,6 +119,14 @@ namespace ProductCatalog
                     StatusTextBlock.Text = "Unexpected result!";
                     break;
             }
+        }
+
+        // Metod för att rensa textfälten och återställa ComboBox 
+        private void ClearInputFields()
+        {
+            ProductNameTextBox.Clear();
+            PriceTextBox.Clear();
+            CategoryTextBox.SelectedIndex = -1; // Återställ ComboBox till ingen vald
         }
     }
 }

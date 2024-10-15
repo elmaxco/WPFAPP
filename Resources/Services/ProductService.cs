@@ -49,7 +49,7 @@ public class ProductService : IProductService
     {
         try
         {
-            // Ladda in produkter från filen
+            // Ladda in produkter från filen till listan
             GetProductsFromFile();
 
             // Kontrollera om produkten finns i listan
@@ -57,10 +57,10 @@ public class ProductService : IProductService
             if (productToDelete == null)
                 return ResultStatus.NotFound;
 
-            // Ta bort produkten från listan
+            // Ta bort produkten från listan om den finns
             _productList.Remove(productToDelete);
 
-            // Spara den uppdaterade listan tillbaka till filen
+            // Spara den uppdaterade listan tillbaka till filen, fixat stavfel
             var json = JsonConvert.SerializeObject(_productList, Newtonsoft.Json.Formatting.Indented);
             var result = _fileService.SaveToFile(json);
 
