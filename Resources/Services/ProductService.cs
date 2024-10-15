@@ -12,7 +12,9 @@ public class ProductService : IProductService
     private readonly FileService _fileService = new FileService(_filePath);
     private List<Product> _productList = new List<Product>();
     private decimal price;
+    
 
+    
 
     public ResultStatus AddToList(Product product)
     {
