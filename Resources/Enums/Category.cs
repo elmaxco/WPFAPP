@@ -9,3 +9,4 @@ public enum Category
     Kitchen,
     Sports
 }
+// lägger till fler kategorier om det behövs

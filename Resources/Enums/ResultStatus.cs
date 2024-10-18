@@ -8,3 +8,4 @@ public enum ResultStatus
     SuccessWithErrors,
     NotFound,
 }
+// enum för att hantera olika resultatstatusar

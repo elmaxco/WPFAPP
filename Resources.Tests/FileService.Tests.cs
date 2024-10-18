@@ -1,6 +1,4 @@
-﻿using Xunit;
-using Resources.Services;
-using System.IO;
+﻿using Resources.Services;
 
 public class FileServiceTests
 {

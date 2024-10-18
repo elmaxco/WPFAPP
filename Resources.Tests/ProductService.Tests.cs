@@ -1,11 +1,8 @@
 ﻿using Moq;
-using Xunit;
 using Resources.Services;
 using Resources.Models;
 using Resources.Enums;
-using System.Collections.Generic;
 using Newtonsoft.Json;
-using System.Linq;
 
 public class ProductServiceTests
 {

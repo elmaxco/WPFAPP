@@ -12,13 +12,4 @@
     <ProjectReference Include="..\Resources\Resources.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Fonts\" />
-    <Folder Include="Images\" />
-    <Folder Include="MVVM\Model\" />
-    <Folder Include="MVVM\ViewModel\" />
-    <Folder Include="MVVM\View\" />
-    <Folder Include="Theme\" />
-  </ItemGroup>
-
 </Project>

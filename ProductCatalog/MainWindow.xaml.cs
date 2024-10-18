@@ -15,7 +15,7 @@ namespace ProductCatalog
         {
             InitializeComponent();
 
-            // Skapa en instans av FileService och skicka den till ProductService
+            // Fixat en instans av FileService och skicka den till ProductService
             IFileService fileService = new FileService("file.json");
             _productService = new ProductService(fileService);
 
@@ -32,7 +32,7 @@ namespace ProductCatalog
             if (!decimal.TryParse(PriceTextBox.Text, out var price))
             {
                 StatusTextBlock.Text = "Error: Price must be a valid number!";
-                return; // Avbryt om priset inte är giltigt
+                return; // Om priset inte är giltigt
             }
 
             var product = new Product
