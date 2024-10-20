@@ -67,7 +67,7 @@ public class ProductService : IProductService
         }
     }
 
-    // Uppdaterad: Metoden är nu public för att matcha gränssnittet
+    // Metoden är nu ändrad till public för att matcha gränssnittet
     public void GetProductsFromFile()
     {
         try
@@ -79,7 +79,7 @@ public class ProductService : IProductService
         }
         catch
         {
-            // Handle exceptions if necessary
+            
         }
     }
 }
